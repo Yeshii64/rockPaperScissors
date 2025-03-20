@@ -2,7 +2,11 @@ import kotlin.system.exitProcess
 
 //Rock Paper Scissors game!
 //March 12
-//TODO (ideas! - make it so that the user is able to play multiple rounds, win loss ratio??
+//TODO (ideas! - make it so that the user is able to play multiple rounds
+
+val WinList = mutableListOf<Int>()
+val LossList = mutableListOf<Int>()
+
 fun main() {
         menu()
 }
@@ -28,11 +32,9 @@ fun menu(){
 }
 
 //code for the gameplay
-fun gameplay(): List<Int> {
+fun gameplay(): Int {
     var playerScore = 0
     var computerScore = 0
-    val WinList = mutableListOf<Int>()
-    val LossList = mutableListOf<Int>()
     println("Pick your choice (rock, paper, or scissors): ")
     val playerChoice = readlnOrNull()?.lowercase() ?: ""
 
@@ -49,7 +51,6 @@ fun gameplay(): List<Int> {
         val tie = playerChoice == randomchoice
         if (tie){
             println("You picked the same choice!")
-
             println("Computer choice: $randomchoice")
             println("Player choice: $playerChoice")
         }
@@ -59,29 +60,29 @@ fun gameplay(): List<Int> {
             println("Computer gains a point!")
             computerScore++
             //adding the loss or win (refer to line 75) to a list so the user can see how many wins/losses they have
-            LossList.add(1, computerScore)
+            LossList.add(computerScore)
         }else if (playerChoice == "paper" && randomchoice == "scissors"){
             println("Computer gains a point!")
             computerScore++
-            LossList.add(1, computerScore)
+            LossList.add(computerScore)
         }else if (playerChoice == "scissors" && randomchoice == "rock"){
             println("Computer gains a point!")
             computerScore++
-            LossList.add(1, computerScore)
+            LossList.add(computerScore)
         }
         //player wins
         if (randomchoice == "rock" && playerChoice == "paper"){
             println("Player gains a point!")
             playerScore++
-            WinList.add(1, playerScore)
+            WinList.add(playerScore)
         } else if(randomchoice == "paper" && playerChoice == "scissors"){
             println("Player gains a point!")
             playerScore++
-            WinList.add(1, playerScore)
+            WinList.add(playerScore)
         } else if(randomchoice == "scissors" && playerChoice == "rock"){
             println("Player gains a point!")
             playerScore++
-            WinList.add(1, playerScore)
+            WinList.add(playerScore)
         }
 
         //u know how games have a pause menu where they ask if you want to go to the menu and such? yeah.
@@ -94,6 +95,8 @@ fun gameplay(): List<Int> {
         }
 
     }
+    return playerScore
+    return computerScore
 }
 
 //code for difficulty settings
@@ -106,20 +109,39 @@ fun viewWL(){
     println("1. Win/Loss Count")
     println("2. Win/Loss Ratio")
     println("3. Tie Count")
+    println("4. Go back to Menu")
     println("What do you want to view?")
 
     when(readlnOrNull()?.toIntOrNull()){
-        1 -> WLCOUNT()
+        1 -> {
+            println("You have ${WinList.size} wins and ${LossList.size} losses.")
+            viewWL()
+        }
+        2 -> winLossRatio()
+        3 -> tieCount()
+        4 -> menu()
     }
 
 }
 
-//viewing win loss count
-fun WLCOUNT(WinList: List<Int>, LossList: List<Int>){
-    println("You have ${WinList.size} wins and ${LossList.size} losses.")
+//to calculate the win loss ratio you need to divide the wins by the losses
+fun winLossRatio(){
+    var wins = WinList.count().toDouble()
+    var losses = LossList.count()
+    //TODO(if you have no wins and no losses... then what)
+    if (losses != 0){
+        println( wins / losses )
+        viewWL()
+    } else{
+        println("You have no losses, cannot calculate!")
+    }
+
 }
 
-
+fun tieCount(){
+    println("Prints your tie!")
+    //todo - figure out how to do this
+}
 
 
 //exiting the function

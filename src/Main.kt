@@ -2,10 +2,11 @@ import kotlin.system.exitProcess
 
 //Rock Paper Scissors game!
 //March 12
-//TODO (ideas! - make it so that the user is able to play multiple rounds
+
 
 val WinList = mutableListOf<Int>()
 val LossList = mutableListOf<Int>()
+val tieList = mutableListOf<Int>()
 
 fun main() {
         menu()
@@ -14,19 +15,16 @@ fun main() {
 
 //code for the menu
 fun menu(){
-    println("worked")
     println("Hi Welcome!")
     println("1. Play Rock, Paper, Scissors")
-    println("2. Difficulty Settings")
-    println("3. Stats")
-    println("4. Exit")
+    println("2. Stats")
+    println("3. Exit")
     println("Choose:")
 
     when(readlnOrNull()?.toIntOrNull()){
         1 -> gameplay()
-        2 -> difficulty()
-        3 -> viewWL()
-        4 -> exit()
+        2 -> statMenu()
+        3 -> exit()
         else -> println("Invalid.")
     }
 }
@@ -35,14 +33,13 @@ fun menu(){
 fun gameplay(): Int {
     var playerScore = 0
     var computerScore = 0
+    var tietimes = 0
+    val validInputs = arrayOf("rock", "paper", "scissors") //for input validation
     println("Pick your choice (rock, paper, or scissors): ")
     val playerChoice = readlnOrNull()?.lowercase() ?: ""
 
 
-    if (playerChoice.isBlank() || playerChoice.toIntOrNull() != null) {
-        println("Invalid input")
-        menu()
-    } else {
+    if(playerChoice in validInputs){
         val choices = arrayOf("rock", "paper", "scissors")
         var randomchoice = choices.random()
         println(randomchoice)
@@ -53,8 +50,9 @@ fun gameplay(): Int {
             println("You picked the same choice!")
             println("Computer choice: $randomchoice")
             println("Player choice: $playerChoice")
+            tietimes++
+            tieList.add(tietimes)
         }
-
         //computer wins
         if(playerChoice == "rock" && randomchoice == "paper"){
             println("Computer gains a point!")
@@ -94,18 +92,19 @@ fun gameplay(): Int {
             gameplay()
         }
 
+    } else {
+        println("Invalid input")
+        menu()
     }
     return playerScore
     return computerScore
 }
 
-//code for difficulty settings
-fun difficulty(){
-    println("I am the difficulty setting")
-    //TODO(difficulty setting)
-}
+
+
+
 //code for viewing the stats
-fun viewWL(){
+fun statMenu(){
     println("1. Win/Loss Count")
     println("2. Win/Loss Ratio")
     println("3. Tie Count")
@@ -115,32 +114,37 @@ fun viewWL(){
     when(readlnOrNull()?.toIntOrNull()){
         1 -> {
             println("You have ${WinList.size} wins and ${LossList.size} losses.")
-            viewWL()
+            statMenu()
         }
         2 -> winLossRatio()
         3 -> tieCount()
         4 -> menu()
     }
-
 }
 
 //to calculate the win loss ratio you need to divide the wins by the losses
 fun winLossRatio(){
     var wins = WinList.count().toDouble()
     var losses = LossList.count()
-    //TODO(if you have no wins and no losses... then what)
+
     if (losses != 0){
         println( wins / losses )
-        viewWL()
+        statMenu()
     } else{
         println("You have no losses, cannot calculate!")
+        statMenu()
     }
 
 }
 
 fun tieCount(){
-    println("Prints your tie!")
-    //todo - figure out how to do this
+    if(tieList.count() != 0){
+        println("You and the computer have tied ${tieList.count()} of times!")
+        statMenu()
+    } else {
+        println("You and the computer have tied 0 times.")
+        statMenu()
+    }
 }
 
 
